@@ -1,0 +1,76 @@
+
+PerspectiveCamera {
+    center 0 0 0
+    direction 0 1 0
+    up 0 0 1
+    angle 45
+}
+
+Lights {
+    numLights 1
+    PointLight {
+        position 0 0 0
+        color 0 0 0
+    }
+}
+
+Background {
+    color 0.1 0.1 0.1 
+	ambientLight 0.9 0.9 0.9
+}
+
+Materials {
+    numMaterials 2
+    Material {
+		diffuseColor 0.1 0.1 0.1
+		specularColor 0 0 0
+		shininess 20
+		texture earth.bmp
+	}
+
+    Material {
+		diffuseColor 0.1 0.1 0.1
+		specularColor 0 0 0
+		shininess 20
+		texture earth_night.bmp
+	}
+}
+
+Group {
+    numObjects 4
+    MaterialIndex 0
+	Transform {
+		Translate -7 40 7
+		XRotate 90
+		Sphere {
+			center 0 0 0
+			radius 5
+		}
+	}
+
+	Transform {
+		Translate 7 40 7
+		XRotate -90
+		Sphere {
+			center 0 0 0
+			radius 5
+		}
+	}
+
+	Transform {
+		Translate -7 40 -7
+		Sphere {
+			center 0 0 0
+			radius 5
+		}
+	}
+
+	MaterialIndex 1
+	Transform {
+		Translate 7 40 -7
+		Sphere {
+			center 0 0 0
+			radius 5
+		}
+	}
+}

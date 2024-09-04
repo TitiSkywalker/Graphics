@@ -1,0 +1,52 @@
+PerspectiveCamera {
+    center 0 -1500 0
+    direction 0 1 0
+    up 0 0 1
+    angle 45
+}
+
+Background {
+    color 0.6 0.6 0.6
+    ambientLight 0.2 0.2 0.2
+}
+
+Lights {
+    numLights 2
+
+    DirectionalLight {
+        direction -1 1 -1
+        color 0.8 0.8 0.8
+    }
+
+    PointLight {
+	    position -500 -500 500
+	    color 0 0 0
+    }
+}
+
+Materials {
+    numMaterials 2
+
+    Material { 
+		diffuseColor 0.5075 0.5075 0.5075
+		specularColor 0.5083 0.5083 0.5083
+		shininess 51.2
+    }
+
+    Mirror { }
+}
+
+Group {
+    numObjects 1
+
+    MaterialIndex 0
+	Transform {
+        XRotate 90
+        YRotate -90
+        Translate 0 -200 0
+		TriangleMesh {
+			obj_file complex/eagle.obj
+		}
+    }
+}
+

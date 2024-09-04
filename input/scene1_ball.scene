@@ -1,0 +1,152 @@
+
+DOFCamera {
+    center 0 -50 0
+    direction 0 1 0
+    up 0 0 1
+    angle 45
+    focalLength 40
+    aperture 2
+}
+
+Lights {
+    numLights 2
+    PointLight {
+	position 0 5 9
+	color 0 0 0
+    }
+    PointLight {
+	position 0 5 9
+	color 0 0 0
+    }
+}
+
+LightGroup {
+    numObjects 2
+    LightTriangle {
+	vertex0 -5 -10 9.999
+	vertex1 -5 -20 9.999
+	vertex2 5 -20 9.999
+	color 0.9 0.9 0.9
+    }
+    LightTriangle {
+	vertex0 5 -20 9.999
+	vertex1 5 -10 9.999
+	vertex2 -5 -10 9.999
+	color 0.9 0.9 0.9
+    }
+}
+
+Background {
+    color 0 1 0 
+    ambientLight 0.1 0.1 0.1
+}
+
+Materials {
+    numMaterials 11
+    Ambient { 
+	diffuseColor 0.7516 0.6065 0.2265
+	specularColor 0.6283 0.5558 0.3661
+	shininess 51.2
+    }
+    Ambient { 
+	diffuseColor 0.5075 0.5075 0.5075
+	specularColor 0.5083 0.5083 0.5083
+	shininess 51.2
+    }
+    Ambient { 
+	diffuseColor 0.5 0.1 0.1 
+	specularColor 0 0 0
+    }
+    Ambient {
+	diffuseColor 0.1 0.5 0.1
+	specularColor 0 0 0
+    }
+    Ambient {
+	diffuseColor 0 0 0
+	specularColor 0 0 0
+   }
+    Mirror { }
+    Glass {
+	refractionIndex 1.7
+    }
+    Glossy {
+	diffuseColor 0.4627 0.4667 0.4706
+	specularColor 0.8627 0.8745 0.8901
+	shininess 51.2
+	roughness 0.1
+    }
+    Glossy {
+	diffuseColor 0.4627 0.4667 0.4706
+	specularColor 0.8627 0.8745 0.8901
+	shininess 51.2
+	roughness 0.3
+    }
+    Glossy {
+	diffuseColor 0.4627 0.4667 0.4706
+	specularColor 0.8627 0.8745 0.8901
+	shininess 51.2
+	roughness 0.6
+    }
+    Glossy {
+	diffuseColor 0.4627 0.4667 0.4706
+	specularColor 0.8627 0.8745 0.8901
+	shininess 51.2
+	roughness 1
+    }
+}
+
+Group {
+    numObjects 9
+    MaterialIndex 7
+    Sphere {
+	center -7.5 -15 -3
+	radius 2.5
+    }
+
+    MaterialIndex 8
+    	Sphere {
+		center -2.5 -10 -1
+		radius 2.5
+    	}
+
+    MaterialIndex 9
+Velocity {
+velocity 0 0 2
+    Sphere {
+	center 2.5 -5 1
+	radius 2.5
+    }
+}
+
+    MaterialIndex 10
+    Sphere {
+	center 7.5 0 3
+	radius 2.5
+    }
+
+    MaterialIndex 0
+    Plane {
+	normal 0 -1 0
+	offset -10
+    }
+    MaterialIndex 2
+    Plane {
+	normal 0 0 1
+        offset -10
+    }
+    MaterialIndex 4
+    Plane {
+	normal 0 0 -1
+	offset -10
+    }
+    MaterialIndex 3
+    Plane {
+	normal 1 0 0
+	offset -10
+    }
+    Plane {
+	normal -1 0 0
+	offset -10
+    }
+}
+

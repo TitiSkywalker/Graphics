@@ -1,0 +1,112 @@
+
+PerspectiveCamera {
+    center 0 -50 0
+    direction 0 1 0
+    up 0 0 1
+    angle 45
+}
+
+LightGroup {
+    numObjects 3
+    LightSphere {
+        center 0 -10 9
+        radius 1
+        color 1 1 1
+        falloff 0.001
+    }
+    LightSphere {
+        center -5 -20 9
+        radius 1
+        color 1 1 1
+        falloff 0.001
+    }
+    LightSphere {
+        center 5 -20 9
+        radius 1
+        color 1 1 1
+        falloff 0.001
+    }
+}
+
+Background {
+    color 0 1 0 
+    ambientLight 0.1 0.1 0.1
+}
+
+Materials {
+    numMaterials 8
+    Ambient { 
+	diffuseColor 0.7516 0.6065 0.2265
+	specularColor 0.6283 0.5558 0.3661
+	shininess 51.2
+    }
+    Ambient { 
+	diffuseColor 0.5075 0.5075 0.5075
+	specularColor 0.5083 0.5083 0.5083
+	shininess 51.2
+    }
+    Ambient { 
+	diffuseColor 0.5 0.1 0.1 
+	specularColor 0 0 0
+    }
+    Ambient {
+	diffuseColor 0.1 0.5 0.1
+	specularColor 0 0 0
+    }
+    Ambient {
+	diffuseColor 0 0 0
+	specularColor 0 0 0
+   }
+    Mirror { }
+    Glass {
+	refractionIndex 1.7
+    }
+    Glossy {
+	diffuseColor 0.5075 0.5075 0.5075
+	specularColor 0.5083 0.5083 0.5083
+	shininess 51.2
+	roughness 1.0
+    }
+}
+
+Group {
+    numObjects 6
+
+    MaterialIndex 6
+    Transform {
+        Scale 3 3 3
+	Translate 0 -5 0
+	ZRotate -30
+	XRotate 10
+	YRotate -45
+        TriangleMesh {
+            obj_file diamond.obj
+        }
+    }
+
+    MaterialIndex 0
+    Plane {
+	normal 0 -1 0
+	offset -10
+    }
+    MaterialIndex 2
+    Plane {
+	normal 0 0 1
+        offset -10
+    }
+    MaterialIndex 4
+    Plane {
+	normal 0 0 -1
+	offset -10
+    }
+    MaterialIndex 3
+    Plane {
+	normal 1 0 0
+	offset -10
+    }
+    Plane {
+	normal -1 0 0
+	offset -10
+    }
+}
+
