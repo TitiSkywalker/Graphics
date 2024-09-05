@@ -1,31 +1,33 @@
-# Ray Tracing in c++ {ignore=true}
+# Monte Carlo Ray Tracing in c++ 
 
-<div align='left'>
-    <img src="https://img.shields.io/badge/License-MIT%20License-purple" alt="Static Badge" />
-</div>
+![alt text](./output/scene1_ball.bmp)
 
-![alt text](./output/scene5_eagle.bmp)
+## Table of contents
+- [Installation](#Installation)
+- [Usage](#Usage)
+- [DIY](#DIY)
+- [Implementation](#implementation)
+    - [Monte Carlo path tracing](#Monte_Carlo_path_tracing)
+    - [Mesh acceleration](#Mesh_acceleration)
+    - [MPI acceleration](#MPI_acceleration)
+    - [Error handling](#Error_handling)
+- [License](#License)
+- [Acknowledgements](#Acknowledgements)
 
-## Table of content {ignore=true}
-
-[TOC]
-
-## Requirements
+## Installation
 I don't want to force you to have the same configuration with me, but I'm really not sure whether this code can run on your device. If anything is wrong, you can just copy my code and build it in your own way.
 
-### Operating system
 **Windows 10 or 11**. I'm not using any kernel function, so I guess Linux or MacOS is fine.
 
-### External libraries
 **msmpi** is a Windows implementation of Open MPI, you can install it with **vcpkg**. Or you can use any version of MPI library you want, as long as the interfaces are the same.
+
 **filesystem** is used for finding files inside the project. It seems that I can only use it with c++ 17 or later.
 
-> **vcpkg** is a useful tool for installing c++ libraries. I'm not an expert on this, so I always ask AI when I have any problem.
+**vcpkg** is a useful tool for installing c++ libraries. I'm not an expert on this, so I always ask AI when I have any problem.
 
-### Build tools
 **Visual Studio 2022**. I apologize for the inconvenience it causes for non-VS users. Visual Studio can build my project automatically, that's why I don't have a "build" section in this readme file.
 
-### Execution
+## Usage
 For single-process rendering, I always press the **start** button in Visual Studio. 
 For multi-process rendering, you can find the .exe file and run
 
@@ -69,7 +71,10 @@ However, how to split the task is actually a problem. At the beginning I separat
 
 ### Error handling
 
-## Acknowledgement
+## License
+Please see the [License.txt](License.txt) for more information.
+
+## Acknowledgements
 This framework is based on assignments from MIT course 6.837: 
 https://ocw.mit.edu/courses/6-837-computer-graphics-fall-2012/
 
