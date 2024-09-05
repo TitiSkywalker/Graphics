@@ -36,150 +36,150 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Box.hpp">
+    <ClInclude Include="code\Box.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="BVH.hpp">
+    <ClInclude Include="code\BVH.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Group.hpp">
+    <ClInclude Include="code\Group.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Object3d.hpp">
+    <ClInclude Include="code\Object3d.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="BitmapImage.hpp">
+    <ClInclude Include="code\BitmapImage.hpp">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.hpp">
+    <ClInclude Include="code\Camera.hpp">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Hit.hpp">
+    <ClInclude Include="code\Hit.hpp">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Image.hpp">
+    <ClInclude Include="code\Image.hpp">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Light.hpp">
+    <ClInclude Include="code\Light.hpp">
       <Filter>Source Files\Light</Filter>
     </ClInclude>
-    <ClInclude Include="LightGroup.hpp">
+    <ClInclude Include="code\LightGroup.hpp">
       <Filter>Source Files\Light</Filter>
     </ClInclude>
-    <ClInclude Include="LightSphere.hpp">
+    <ClInclude Include="code\LightSphere.hpp">
       <Filter>Source Files\Light</Filter>
     </ClInclude>
-    <ClInclude Include="LightObject.hpp">
+    <ClInclude Include="code\LightObject.hpp">
       <Filter>Source Files\Light</Filter>
     </ClInclude>
-    <ClInclude Include="LightTriangle.hpp">
+    <ClInclude Include="code\LightTriangle.hpp">
       <Filter>Source Files\Light</Filter>
     </ClInclude>
-    <ClInclude Include="Material.hpp">
+    <ClInclude Include="code\Material.hpp">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix2f.h">
+    <ClInclude Include="code\Matrix2f.h">
       <Filter>Source Files\Algebra\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix3f.h">
+    <ClInclude Include="code\Matrix3f.h">
       <Filter>Source Files\Algebra\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix4f.h">
+    <ClInclude Include="code\Matrix4f.h">
       <Filter>Source Files\Algebra\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.hpp">
+    <ClInclude Include="code\Mesh.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.hpp">
+    <ClInclude Include="code\Plane.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Quat4f.h">
+    <ClInclude Include="code\Quat4f.h">
       <Filter>Source Files\Algebra\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Ray.hpp">
+    <ClInclude Include="code\Ray.hpp">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="SceneParser.hpp">
+    <ClInclude Include="code\SceneParser.hpp">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.hpp">
+    <ClInclude Include="code\Sphere.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.hpp">
+    <ClInclude Include="code\Texture.hpp">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.hpp">
+    <ClInclude Include="code\Transform.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Triangle.hpp">
+    <ClInclude Include="code\Triangle.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Vecmath.h">
+    <ClInclude Include="code\Vecmath.h">
       <Filter>Source Files\Algebra\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2f.h">
+    <ClInclude Include="code\Vector2f.h">
       <Filter>Source Files\Algebra\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3f.h">
+    <ClInclude Include="code\Vector3f.h">
       <Filter>Source Files\Algebra\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Vector4f.h">
+    <ClInclude Include="code\Vector4f.h">
       <Filter>Source Files\Algebra\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Velocity.hpp">
+    <ClInclude Include="code\Velocity.hpp">
       <Filter>Source Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Render.hpp">
+    <ClInclude Include="code\Render.hpp">
       <Filter>Source Files\Render</Filter>
     </ClInclude>
-    <ClInclude Include="MCTracer.hpp">
+    <ClInclude Include="code\MCTracer.hpp">
       <Filter>Source Files\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Configuration.hpp">
+    <ClInclude Include="code\Configuration.hpp">
       <Filter>Source Files\Render</Filter>
     </ClInclude>
-    <ClInclude Include="File.hpp">
+    <ClInclude Include="code\File.hpp">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="code\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BVH.cpp">
+    <ClCompile Include="code\BVH.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Image.cpp">
+    <ClCompile Include="code\Image.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
+    <ClCompile Include="code\Material.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix2f.cpp">
+    <ClCompile Include="code\Matrix2f.cpp">
       <Filter>Source Files\Algebra\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix3f.cpp">
+    <ClCompile Include="code\Matrix3f.cpp">
       <Filter>Source Files\Algebra\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix4f.cpp">
+    <ClCompile Include="code\Matrix4f.cpp">
       <Filter>Source Files\Algebra\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
+    <ClCompile Include="code\Mesh.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Quat4f.cpp">
+    <ClCompile Include="code\Quat4f.cpp">
       <Filter>Source Files\Algebra\Source</Filter>
     </ClCompile>
-    <ClCompile Include="SceneParser.cpp">
+    <ClCompile Include="code\SceneParser.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Vector3f.cpp">
+    <ClCompile Include="code\Vector3f.cpp">
       <Filter>Source Files\Algebra\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Vector2f.cpp">
+    <ClCompile Include="code\Vector2f.cpp">
       <Filter>Source Files\Algebra\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Vector4f.cpp">
+    <ClCompile Include="code\Vector4f.cpp">
       <Filter>Source Files\Algebra\Source</Filter>
     </ClCompile>
   </ItemGroup>
