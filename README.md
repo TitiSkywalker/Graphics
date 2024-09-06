@@ -2,7 +2,7 @@
 
 ![alt text](output/examples.jpg)
 
-This project implements Monte Carlo ray tracing in c++, accelerated by Open MPI.
+This project implements Monte Carlo ray tracing in c++, accelerated by MPI.
 
 ## 0. Table of contents
 - [Installation](#1-Installation)
@@ -25,7 +25,7 @@ If anything goes wrong, you can just copy my code and build it in your own way.
 
 **Windows 10 or 11**. I'm not using any kernel function, so I think this is not compulsive.
 
-**msmpi** is a Windows implementation of Open MPI. You can install it with **vcpkg**, or you can use any implementation of MPI. **vcpkg** is a useful tool for installing c++ libraries. I'm not an expert on this, so I always ask AI when I have any problem.
+**msmpi** is a Windows implementation of MPI. You can install it with **vcpkg**, or you can use any implementation of MPI. **vcpkg** is a useful tool for installing c++ libraries. I'm not an expert on this, so I always ask AI when I have any problem.
 
 **filesystem** is used for finding files inside the project. It seems that I can only use it with c++ 17 or later.
 
@@ -147,7 +147,7 @@ In the worst case we need to traverse the tree, which takes $O(n)$ time. In the 
 Kd-tree is not perfectly balanced, but it is smarter. It allows us to recurse only on one child if possible. For BVH we need to recurse on all children, but the depth is likely to be smaller. I choose BVH because the coding is simpler, and the constant coefficient in complexity is smaller.
 
 ### 3.3 MPI acceleration
-Using Open MPI to accelerate a program is relatively easy. I just need to let each process compute a small fraction on the image, then merge their results with MPI communications. Considering the small amount of communication involved, I can get linear acceleration ratio.
+Using MPI to accelerate a program is relatively easy. I just need to let each process compute a small fraction on the image, then merge their results with MPI communications. Considering the small amount of communication involved, I can get linear acceleration ratio.
 
 However, how to split the task is actually a problem. At the beginning I separated the image into strips, but this can lead to unbalanced separation. Some processes run very fast, while others are slow. To get a better separation, I first render the image with a low resolution and count the time consumed for different places on the image. Then I can divide the tasks evenly in time domain, rather than in physical domain.
 
@@ -200,6 +200,8 @@ This framework is based on assignment 4 and 5 from MIT course 6.837:
 https://ocw.mit.edu/courses/6-837-computer-graphics-fall-2012/
 
 Here is a clear explanation for the depth of field (DOF) effect: https://pathtracing.home.blog/depth-of-field/
+
+*High Performance Computing: Modern Systems and Practices* is a great book for studying MPI and other high performance techniques: https://dl.acm.org/doi/book/10.5555/3203488
 
 This website provides a lot of 3D sculpture meshes:
 https://threedscans.com/
