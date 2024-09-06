@@ -2,7 +2,7 @@
 
 ![alt text](output/examples.jpg)
 
-This project implements Monte Carlo ray tracing in C++, accelerated by MPI.
+This project implements Monte Carlo ray tracing in C++, accelerated by MPI. 
 
 ## 0. Table of contents
 - [Installation](#1-Installation)
@@ -53,12 +53,13 @@ Graphics
 ```
 
 The **.scene** file contains information about the scene, such as position and color of lights and objects.
-The **.obj** file contains a 3D model. It can be downloaded from online mesh libraries. You can find a good online website in [Acknowledgements](#Acknowledgements).
+The **.obj** files are typical files for 3D models. You can find a good online website in [Acknowledgements](#Acknowledgements) part.
 The format of texture files in "texture/" need to be **.bmp** encoded in RBG values. I have provided [a piece of Python code](texture/converter.py) to convert any image into the correct format.
 The program will read in the **.scene** file, parse meshes and textures, then store the result in "output/" as a **.bmp** file.
 
 ### 2.2 Configuration
-Before running the code, you need to go to the [code/Configuration.hpp](code/Configuration.hpp) and set up suitable parameters, this is the content: 
+Before running the code, you might want to go to [code/Configuration.hpp](code/Configuration.hpp) and set up desired parameters, this is the content: 
+
 ```c++
 #pragma once
 
@@ -98,7 +99,7 @@ static const char* outputFiles[] =
     ...
 };
 ```
-You can set up image width and height. For anti-aliasing techniques, please check out [Anti-aliasing](#Anti-aliasing). For ray tracing, please check out [Monte Carlo path tracing](#Monte-Carlo-path-tracing). We can specify the input and output filenames in those arrays, then specify which one do you want by setting **CHOICE**. If you want to use MPI, you should set **USEMPI** as true.
+You can set up width and height of the image, which will affect resolution. For anti-aliasing, please check out [Anti-aliasing](#Anti-aliasing). For ray tracing, please check out [Monte Carlo path tracing](#Monte-Carlo-path-tracing). You can specify the input and output files in arrays, then specify which one do you want by setting **CHOICE** variable. If you want to use MPI, you should set **USEMPI** as true.
 
 ### 2.3 Execution
 For single-process rendering, I always press the **start** button in Visual Studio. 
@@ -108,7 +109,7 @@ For multi-process rendering, you can run the following command:
 mpiexec -n <number of processes> .\Graphics
 ``` 
 
-Please make sure that you are within the same directory with the executable file. Please also make sure you are within the project directory, which must be called "Graphics", otherwise the program won't be able to find itself.
+Please make sure the project directory is called "Graphics", otherwise the program won't be able to locate other files.
 
 [Examples](#Examples) are provided, you can have your own image based on these scene files. I apologize for not providing detailed format for scene files, but I believe it's more straightforward to see real examples.
 
@@ -118,38 +119,40 @@ This project is object-oriented. You are welcomed to see my code, most of which 
 ### 3.1 Monte Carlo path tracing
 Monte Carlo path tracing can give you global illumination. There are several special features:
 - Light object. Instead of using point lights and directional lights, we can use 3D light sources and sample them.
-- Better material. By using the bidirectional reflective distribution function (BRDF), we can get ambient material and glossy material. This can be calculated by Monte Carlo integration, which sends lots of random reflection rays and blend their colors together.
-- Soft shadow. The most classic explanation is although the floor under your table is not directly lit by the light, you can still see it. This can't be done using deterministic ray tracing techniques like Phong shading.
+- Better material. By using the bidirectional reflective distribution function (BRDF), we can get ambient material and glossy material. This can be calculated by Monte Carlo integration, which sends lots of random reflection rays to sample the function space.
+- Soft shadow. Although the floor under your table is not directly lit by the light, you can still see it. This can't be done using traditional ray tracing techniques.
 
-In ray tracing, we need to determine when to stop the recursion. This is done by Russian roulette (just flip a coin). You can change the stop probability in [Configuration.hpp](code/Configuration.hpp). 
+In ray tracing, we need to determine when to stop tracing the ray. This is done by flipping a coin. You can change the stop probability in [Configuration.hpp](code/Configuration.hpp). 
 
-In order to get an image with less noise, we need to sample each pixel many times and take the mean of results. According to central limit theorem, we will converge in the end. You can also change the sample rate in the configuration file, but please be aware that this can dramatically slow down the program.
+In order reduce noise, we need to sample each pixel many times and take the mean of results. According to central limit theorem, we will converge in the end. You can also change the sample rate in the configuration file, but please be aware that this can dramatically slow down the program.
 
 ### 3.2 Mesh acceleration
-In the original version, I intersect a triangle mesh by testing all triangles one by one. This is extremely slow, so special data structure is needed. I choose to use the bounding volume hierarchy(BVH).
+In the brute force version, we intersect a triangle mesh by testing all triangles one by one. This is extremely slow. I choose to use bounding volume hierarchy(BVH) to accelerate this operation.
 
 #### 3.2.1 construction
-The construction of BVH is a divide and conquer algorithm. BVH is a binary search tree, I will divide triangles into 2 groups at each node.
+It is a **divide and conquer** algorithm. BVH is a binary search tree, I will divide triangles into 2 groups at each node.
 
 First, I compute the bounding box for all triangles inside this node ($O(n)$ time). I sort all triangles according to the center of their bounding box ($(O(\log n))$ time). Then I divide them evenly and recurse this operation. This gives me the following formula for complexity:
 
 $$T(n) = 2T\left(\frac{n}{2}\right) + O(n \log n)$$
 
-According to master's theorem, the total time for constructing a BVH is $O(n \log n)$. For a mesh with 500,000 triangles, this takes roughly 1 second on my computer.
+According to master's theorem, the total time for constructing a BVH is $O(n \log n)$. I have optimized and made it in-place, so it is very fast. For a mesh with 500,000 triangles, it costs roughly 1 second on my computer.
+
+When the number of triangles is small, we need to stop recursion. I chose this number to be 50, but it is totally heuristic.
 
 #### 3.2.2 intersection
 My BVH is a perfect balanced binary search tree. In each node, there is a bounding box that covers all triangles inside this node. This bounding box is computed in the construction stage.
 
 To compute the intersection point, I first test the incoming ray with the bounding box. If no intersection is detected, I can safely return without further computation. If a intersection is detected, we must recurse on all children.
 
-In the worst case we need to traverse the tree, which takes $O(n)$ time. In the best case we can return immediately, which takes $O(1)$ time. This is always better than brute force algorithm.
+In the worst case we need to traverse the tree, which takes $O(n)$ time. In the best case we can return immediately, which takes $O(1)$ time. If the triangles are layed out evenly in space, it will only take $O(\log n)$ time.
 
-Kd-tree is not perfectly balanced, but it is smarter. It allows us to recurse only on one child if possible. For BVH we need to recurse on all children, but the depth is likely to be smaller. I choose BVH because the coding is simpler, and the constant coefficient in complexity is smaller.
+Kd-tree is not perfectly balanced, but it is smarter. It allows us to recurse only once when we get lucky. For BVH we need to recurse twice, but the depth is smaller. I choose BVH because coding is simpler, and the constant coefficient within $O()$ is smaller.
 
 ### 3.3 MPI acceleration
-Using MPI to accelerate a program is relatively easy. I just need to let each process compute a small fraction on the image, then merge their results with MPI communications. Considering the small amount of communication involved, I can get linear acceleration ratio.
+Using MPI to accelerate a program is relatively easy. I let each process compute a small fraction of the image, then gather the results with MPI communications. I can get linear acceleration ratio because there isn't much communication.
 
-However, how to split the task is actually a problem. At the beginning I separated the image into strips, but this can lead to unbalanced separation. Some processes run very fast, while others are slow. To get a better separation, I first render the image with a low resolution and count the time consumed for different places on the image. Then I can divide the tasks evenly in time domain, rather than in physical domain.
+However, scheduling is actually a problem. At the beginning I separated the image into strips, but this can lead to unbalanced workloads. Some processes run very fast, while others are slow. To get a better schedule, I first render the image with low resolution and count the time for rendering different places. Then I can divide the tasks evenly in time domain, rather than in physical domain.
 
 ### 3.4 Anti-aliasing
 **Super sampling** is achieved by rendering a 3x3 larger image, then "shrink" it by taking the means. This will make your program 10x slower.
@@ -158,18 +161,18 @@ However, how to split the task is actually a problem. At the beginning I separat
 
 **Gaussian blur** can be divided into 2 passes of 1D convolution, so it is very fast.
 
-From here you can compare the effect of anti-aliasing. From left to right: normal, super sampling, Gaussian blur.
+You can see the effect of anti-aliasing here. From left to right: normal, super sampling, Gaussian blur.
 ![alt text](output/compare.bmp)
 
 ## 4. Error handling
-Most runtime errors occur while parsing scene files. I use a special class to do this (if you are interested, please check out [code/SceneParser.hpp](code/SceneParser.hpp) and [code/SceneParser.cpp](code/SceneParser.cpp)). Instead of using asserts everywhere, I throw **std::runtime_error** when something is wrong. Then the class will save the error message and return normally.
+Most runtime errors occur while parsing scene files. I use a special class to do this (if you are interested, please check out [code/SceneParser.hpp](code/SceneParser.hpp) and [code/SceneParser.cpp](code/SceneParser.cpp)). Instead of using asserts everywhere, I throw **std::runtime_error** when something goes wrong. Then the class will catch it and return normally.
 
-In the rendering stage, I first check this class for errors. If something went wrong, I can stop the program by simply do nothing and output the error message. By doing this, I can achieve "soft landing" of broken programs. If you encounter an error, please see the error message and check the scene file.
+If something went wrong, I can stop the program by doing nothing and output the error message. In this way, I can achieve "soft landing" of broken programs, which means I can call the destruction functions and avoid memory leak. If you encounter an error, please see the error message and check the scene file. 
 
-One potential risk is [code/BitmapImage.hpp](code/BitmapImage.hpp). If the format of texture image is not correct, it can lead to segmentation fault, so please use [texture/converter.py](texture/converter.py) to get the correct format.
+One potential risk is [code/BitmapImage.hpp](code/BitmapImage.hpp), which is simply taken from elsewhere. If the format of texture image is not correct, it can lead to segmentation fault. Please use [texture/converter.py](texture/converter.py) to get the correct format.
 
 ## 5. Examples
-Here are some results. All the needed files are provided, you can find them in their corresponding directories. These examples cover almost all of the features, you can modify them freely to render your own image.
+Here are some results. All the files are provided, you can find them in corresponding directories. These examples cover almost all of the features, you can modify them freely to render your own image.
 
 With 16 processes running at the same time, I can get the result within 2 minutes. All of the images can be found in the **Graphics/output/** directory.
 
@@ -201,9 +204,9 @@ https://ocw.mit.edu/courses/6-837-computer-graphics-fall-2012/
 
 Here is a clear explanation for the depth of field (DOF) effect: https://pathtracing.home.blog/depth-of-field/
 
-*High Performance Computing: Modern Systems and Practices* is a great book for studying MPI and other high performance techniques: https://dl.acm.org/doi/book/10.5555/3203488
+*High Performance Computing: Modern Systems and Practices* is a great book for studying MPI and other high performance computing techniques: https://dl.acm.org/doi/book/10.5555/3203488
 
-This website provides a lot of 3D sculpture meshes:
+This website provides a lot of free 3D sculpture meshes:
 https://threedscans.com/
 
 This is a great website for high-resolution planet pictures:
