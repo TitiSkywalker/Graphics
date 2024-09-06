@@ -11,8 +11,8 @@ static constexpr bool GAUSSIANBLUR = true;
 
 //ray tracing 
 static constexpr int SAMPLERATE = 10;			
-static constexpr float EPSILON = 0.01;		
-static constexpr float FALLOFF = 0.25;		
+static constexpr float EPSILON = 0.01;				//prevent self intersection
+static constexpr float FALLOFF = 0.25;				//falloff for secondary rays
 static constexpr int MAXDEPTH = 100;			
 static constexpr float STOPPROBABILITY = 0.5;
 

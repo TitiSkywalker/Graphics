@@ -21,21 +21,19 @@ This project implements Monte Carlo ray tracing in c++, accelerated by Open MPI.
 - [Acknowledgements](#7-Acknowledgements)
 
 ## 1. Installation
-I don't want to force you to have the same configuration with me, but I'm really not sure whether this code can run on your device. If anything is wrong, you can just copy my code and build it in your own way.
+If anything goes wrong, you can just copy my code and build it in your own way.
 
-**Windows 10 or 11**. I'm not using any kernel function, so I guess Linux or MacOS is fine.
+**Windows 10 or 11**. I'm not using any kernel function, so I think this is not compulsive.
 
-**msmpi** is a Windows implementation of Open MPI. You can install it with **vcpkg**, or you can use any implementation of MPI.
+**msmpi** is a Windows implementation of Open MPI. You can install it with **vcpkg**, or you can use any implementation of MPI. **vcpkg** is a useful tool for installing c++ libraries. I'm not an expert on this, so I always ask AI when I have any problem.
 
 **filesystem** is used for finding files inside the project. It seems that I can only use it with c++ 17 or later.
 
-**vcpkg** is a useful tool for installing c++ libraries. I'm not an expert on this, so I always ask AI when I have any problem.
-
-**Visual Studio 2022**. This project is built by Visual Studio and does not contain a makefile. I apologize to anti-VS programmers.
+**Visual Studio 2022**. This project is built by Visual Studio and does not contain a makefile. I apologize to non-VS users.
 
 ## 2. Usage
 ### 2.1 File structure
-To prepare the rendering, please make sure you have these directories in the project: 
+To prepare for the rendering, please make sure you have these directories within the project directory: 
 
 ```
 Graphics
@@ -55,7 +53,7 @@ Graphics
 ```
 
 The **.scene** file contains information about the scene, such as position and color of lights and objects.
-The **.obj** file contains a 3D model. It can be downloaded from online mesh libraries. You can find a good source in [Acknowledgements](#Acknowledgements).
+The **.obj** file contains a 3D model. It can be downloaded from online mesh libraries. You can find a good online website in [Acknowledgements](#Acknowledgements).
 The format of texture files in "texture/" need to be **.bmp** encoded in RBG values. I have provided [a piece of Python code](texture/converter.py) to convert any image into the correct format.
 The program will read in the **.scene** file, parse meshes and textures, then store the result in "output/" as a **.bmp** file.
 
@@ -75,8 +73,8 @@ static constexpr bool GAUSSIANBLUR = false;
 
 //ray tracing 
 static constexpr int SAMPLERATE = 10;			
-static constexpr float EPSILON = 0.01;		
-static constexpr float FALLOFF = 0.25;		
+static constexpr float EPSILON = 0.01;          //prevent self intersection
+static constexpr float FALLOFF = 0.25;          //falloff for secondary rays	
 static constexpr int MAXDEPTH = 100;			
 static constexpr float STOPPROBABILITY = 0.5;
 
@@ -112,7 +110,7 @@ mpiexec -n <number of processes> .\Graphics
 
 Please make sure that you are within the same directory with the executable file. Please also make sure you are within the project directory, which must be called "Graphics", otherwise the program won't be able to find itself.
 
-[Examples](#Examples) are provided, you can have your own image based on these scene files. I apologize for not providing detailed format for scene file, but I believe it's more straightforward to see real examples.
+[Examples](#Examples) are provided, you can have your own image based on these scene files. I apologize for not providing detailed format for scene files, but I believe it's more straightforward to see real examples.
 
 ## 3. Implementation
 This project is object-oriented. You are welcomed to see my code, most of which are annotated in detail.
