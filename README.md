@@ -1,8 +1,8 @@
-# Monte Carlo Ray Tracing in c++ 
+# Monte Carlo Ray Tracing in C++ 
 
 ![alt text](output/examples.jpg)
 
-This project implements Monte Carlo ray tracing in c++, accelerated by MPI.
+This project implements Monte Carlo ray tracing in C++, accelerated by MPI.
 
 ## 0. Table of contents
 - [Installation](#1-Installation)
