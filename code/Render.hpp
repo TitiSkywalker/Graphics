@@ -23,7 +23,7 @@ void printRenderInforation(const SceneParser& sceneParser)
 	cout << "- image resolution  | " << WIDTH << " x " << HEIGHT << endl;
 	cout << "- MPI acceleration  | " << (USEMPI ? "true" : "false") << endl;
 	cout << "- supersampling     | " << (SUPERSAMPLING ? "true" : "false") << endl;
-	cout << "- jittored sampling | " << (JITTOR ? "true" : "false") << endl;
+	cout << "- jittored sampling | " << (JITTER ? "true" : "false") << endl;
 	cout << "- Gaussian blur     | " << (GAUSSIANBLUR ? "true" : "false") << endl;
 	if (sceneParser.checkStatus())
 	{
@@ -31,7 +31,7 @@ void printRenderInforation(const SceneParser& sceneParser)
 		cout << "- # lights          | " << sceneParser.getNumLights() << endl;
 		cout << "- # light objects   | " << sceneParser.getNumLightObjects() << endl;
 		cout << "- # materials       | " << sceneParser.getNumMaterials() << endl;
-		cout << "- is stochastic     | " << (sceneParser.hasStochasticScene() || sceneParser.hasStochasticCamera() ||  JITTOR ? "true" : "false") << endl;
+		cout << "- is stochastic     | " << (sceneParser.hasStochasticScene() || sceneParser.hasStochasticCamera() ||  JITTER ? "true" : "false") << endl;
 		cout << "- ready to start rendering" << endl << endl;
 	}
 	else
@@ -56,7 +56,7 @@ void render()
 		return;
 	//for static scene, no need to repeat computation
 	bool needRegenerateRay = sceneParser.hasStochasticCamera();
-	int sampleRate = sceneParser.hasStochasticScene() || needRegenerateRay || JITTOR ? SAMPLERATE : 1;
+	int sampleRate = sceneParser.hasStochasticScene() || needRegenerateRay || JITTER ? SAMPLERATE : 1;
 	
 	Camera* camera = sceneParser.getCamera();
 	camera->setSize(width, height);
@@ -79,7 +79,7 @@ void render()
 			Ray ray = camera->generateRay(i, j);
 			for (int k = 0; k < sampleRate; k++)
 			{
-				if (JITTOR)
+				if (JITTER)
 					ray = camera->generateJittoredRay(i, j);
 				else if (needRegenerateRay)
 					ray = camera->generateRay(i, j);
@@ -162,7 +162,7 @@ void render_MPI(int argc, char* argv[])
 	}
 	//for static scene, no need to repeat computation
 	bool needRegenerateRay = sceneParser.hasStochasticCamera();
-	int sampleRate = sceneParser.hasStochasticScene() || needRegenerateRay || JITTOR ? SAMPLERATE : 1;
+	int sampleRate = sceneParser.hasStochasticScene() || needRegenerateRay || JITTER ? SAMPLERATE : 1;
 
 	Camera* camera = sceneParser.getCamera();
 	camera->setSize(width, height);
@@ -203,7 +203,7 @@ void render_MPI(int argc, char* argv[])
 				Ray ray = camera->generateRay(i, j);
 				for (int k = 0; k < 3; k++)
 				{
-					if (JITTOR)
+					if (JITTER)
 						ray = camera->generateJittoredRay(i, j);
 					else if (needRegenerateRay)
 						ray = camera->generateRay(i, j);
@@ -359,7 +359,7 @@ void render_MPI(int argc, char* argv[])
 			for (int k = 0; k < sampleRate; k++)
 			{
 				//Generate ray
-				if (JITTOR)
+				if (JITTER)
 					ray = camera->generateJittoredRay(column2do[i], j);
 				else if (needRegenerateRay)
 					ray = camera->generateRay(column2do[i], j);

@@ -1,16 +1,22 @@
 # Monte Carlo Ray Tracing in c++ 
 
-![alt text](./output/scene1_ball.bmp)
+![alt text](output/examples.jpg)
+
+This project implements Monte Carlo ray tracing in c++, accelerated by Open MPI.
 
 ## Table of contents
 - [Installation](#Installation)
 - [Usage](#Usage)
-- [DIY](#DIY)
+    - [File structure](#File-structure)
+    - [Configuration](#Configuration)
+    - [Execution](#Execution)
 - [Implementation](#implementation)
-    - [Monte Carlo path tracing](#Monte_Carlo_path_tracing)
-    - [Mesh acceleration](#Mesh_acceleration)
-    - [MPI acceleration](#MPI_acceleration)
-    - [Error handling](#Error_handling)
+    - [Monte Carlo path tracing](#Monte-Carlo-path-tracing)
+    - [Mesh acceleration](#Mesh-acceleration)
+    - [MPI acceleration](#MPI-acceleration)
+    - [Anti-aliasing](#Anti-aliasing)
+- [Error handling](#Error-handling)
+- [Examples](#Examples)
 - [License](#License)
 - [Acknowledgements](#Acknowledgements)
 
@@ -19,29 +25,107 @@ I don't want to force you to have the same configuration with me, but I'm really
 
 **Windows 10 or 11**. I'm not using any kernel function, so I guess Linux or MacOS is fine.
 
-**msmpi** is a Windows implementation of Open MPI, you can install it with **vcpkg**. Or you can use any version of MPI library you want, as long as the interfaces are the same.
+**msmpi** is a Windows implementation of Open MPI. You can install it with **vcpkg**, or you can use any implementation of MPI.
 
 **filesystem** is used for finding files inside the project. It seems that I can only use it with c++ 17 or later.
 
 **vcpkg** is a useful tool for installing c++ libraries. I'm not an expert on this, so I always ask AI when I have any problem.
 
-**Visual Studio 2022**. I apologize for the inconvenience it causes for non-VS users. Visual Studio can build my project automatically, that's why I don't have a "build" section in this readme file.
+**Visual Studio 2022**. This project is built by Visual Studio and does not contain a makefile. I apologize to anti-VS programmers.
 
 ## Usage
+### File structure
+To prepare the rendering, please make sure you have these directories in the project: 
+
+```
+Graphics
+├─input
+│  └─in.scene
+│  └─...
+├─mesh
+│  └─model.obj
+│  └─...
+├─output
+│  └─out.bmp
+│  └─...
+├─texture
+   └─converter.py
+   └─skin.bmp
+   └─...
+```
+
+The **.scene** file contains information about the scene, such as position and color of lights and objects.
+The **.obj** file contains a 3D model. It can be downloaded from online mesh libraries. You can find a good source in [Acknowledgements](#Acknowledgements).
+The format of texture files in "texture/" need to be **.bmp** encoded in RBG values. I have provided [a piece of Python code](texture/converter.py) to convert any image into the correct format.
+The program will read in the **.scene** file, parse meshes and textures, then store the result in "output/" as a **.bmp** file.
+
+### Configuration
+Before running the code, you need to go to the [code/Configuration.hpp](code/Configuration.hpp) and set up suitable parameters, this is the content: 
+```c++
+#pragma once
+
+//image size
+static constexpr int WIDTH = 400;
+static constexpr int HEIGHT = 400;
+
+//anti-aliasing
+static constexpr bool SUPERSAMPLING = false;
+static constexpr bool JITTER = false;
+static constexpr bool GAUSSIANBLUR = false;	
+
+//ray tracing 
+static constexpr int SAMPLERATE = 10;			
+static constexpr float EPSILON = 0.01;		
+static constexpr float FALLOFF = 0.25;		
+static constexpr int MAXDEPTH = 100;			
+static constexpr float STOPPROBABILITY = 0.5;
+
+//accelerating
+static constexpr bool USEMPI = false;		
+
+//choose input/output file
+static constexpr int CHOICE = 0;
+
+//edit this when you want to add new files or change filename
+//all input | output files must be within the "input | output" directory
+static const char* inputFiles[] =
+{
+    "scene0_glass.scene",
+    ...
+};
+
+static const char* outputFiles[] =
+{
+    "scene0_glass.bmp",
+    ...
+};
+```
+You can set up image width and height. For anti-aliasing techniques, please check out [Anti-aliasing](#Anti-aliasing). For ray tracing, please check out [Monte Carlo path tracing](#Monte-Carlo-path-tracing). We can specify the input and output filenames in those arrays, then specify which one do you want by setting **CHOICE**. If you want to use MPI, you should set **USEMPI** as true.
+
+### Execution
 For single-process rendering, I always press the **start** button in Visual Studio. 
-For multi-process rendering, you can find the .exe file and run
+For multi-process rendering, you can run the following command:
 
 ```shell
 mpiexec -n <number of processes> .\Graphics
 ``` 
 
-## DIY
+Please make sure that you are within the same directory with the executable file. Please also make sure you are within the project directory, which must be called "Graphics", otherwise the program won't be able to find itself.
+
+[Examples](#Examples) are provided, you can have your own image based on these scene files. I apologize for not providing detailed format for scene file, but I believe it's more straightforward to see real examples.
 
 ## Implementation
-Here are something I want to share with you. You are welcomed to see my code and give me some advice. There are annotations everywhere in my code (although they might not be very professional).
+This project is object-oriented. You are welcomed to see my code, most of which are annotated in detail.
 
 ### Monte Carlo path tracing
-The most important part is computing reflection rays and sampling light sources.
+Monte Carlo path tracing can give you global illumination. There are several special features:
+- Light object. Instead of using point lights and directional lights, we can use 3D light sources and sample them.
+- Better material. By using the bidirectional reflective distribution function (BRDF), we can get ambient material and glossy material. This can be calculated by Monte Carlo integration, which sends lots of random reflection rays and blend their colors together.
+- Soft shadow. The most classic explanation is although the floor under your table is not directly lit by the light, you can still see it. This can't be done using deterministic ray tracing techniques like Phong shading.
+
+In ray tracing, we need to determine when to stop the recursion. This is done by Russian roulette (just flip a coin). You can change the stop probability in [Configuration.hpp](code/Configuration.hpp). 
+
+In order to get an image with less noise, we need to sample each pixel many times and take the mean of results. According to central limit theorem, we will converge in the end. You can also change the sample rate in the configuration file, but please be aware that this can dramatically slow down the program.
 
 ### Mesh acceleration
 In the original version, I intersect a triangle mesh by testing all triangles one by one. This is extremely slow, so special data structure is needed. I choose to use the bounding volume hierarchy(BVH).
@@ -69,17 +153,65 @@ Using Open MPI to accelerate a program is relatively easy. I just need to let ea
 
 However, how to split the task is actually a problem. At the beginning I separated the image into strips, but this can lead to unbalanced separation. Some processes run very fast, while others are slow. To get a better separation, I first render the image with a low resolution and count the time consumed for different places on the image. Then I can divide the tasks evenly in time domain, rather than in physical domain.
 
-### Error handling
+### Anti-aliasing
+**Super sampling** is achieved by rendering a 3x3 larger image, then "shrink" it by taking the means. This will make your program 10x slower.
+
+**Jittered sampling** will send randomly disturbed rays into the scene, thus getting a better sampling when sample rate is high.
+
+**Gaussian blur** can be divided into 2 passes of 1D convolution, so it is very fast.
+
+From here you can compare the effect of anti-aliasing. From left to right: normal, super sampling, Gaussian blur.
+![alt text](output/compare.bmp)
+
+## Error handling
+Most runtime errors occur while parsing scene files. I use a special class to do this (if you are interested, please check out [code/SceneParser.hpp](code/SceneParser.hpp) and [code/SceneParser.cpp](code/SceneParser.cpp)). Instead of using asserts everywhere, I throw **std::runtime_error** when something is wrong. Then the class will save the error message and return normally.
+
+In the rendering stage, I first check this class for errors. If something went wrong, I can stop the program by simply do nothing and output the error message. By doing this, I can achieve "soft landing" of broken programs. If you encounter an error, please see the error message and check the scene file.
+
+One potential risk is [code/BitmapImage.hpp](code/BitmapImage.hpp). If the format of texture image is not correct, it can lead to segmentation fault, so please use [texture/converter.py](texture/converter.py) to get the correct format.
+
+## Examples
+Here are some results. All the needed files are provided, you can find them in their corresponding directories. These examples cover almost all of the features, you can modify them freely to render your own image.
+
+With 16 processes running at the same time, I can get each of the following images within 2 minutes.
+
+[scene0_glass.bmp](output/scene0_glass.bmp)
+![alt text](output/scene0_glass.bmp)
+
+[scene1_ball.bmp](output/scene1_ball.bmp)
+![alt text](output/scene1_ball.bmp)
+
+[scene2_bunny.bmp](output/scene2_bunny.bmp)
+![alt text](output/scene2_bunny.bmp)
+
+[scene3_diamond.bmp](output/scene3_diamond.bmp)
+![alt text](output/scene3_diamond.bmp)
+
+[scene4_earth.jpg](output/scene4_earth.jpg)
+![alt text](output/scene4_earth.jpg)
+This image is so large that I have to save it in .jpg format. To wrap a texture around a sphere, I compute the longitude and latitude of the intersection point on the sphere.
+
+[scene5_goat.bmp](output/scene5_goat.bmp)
+![alt text](output/scene5_goat.bmp)
+This mesh is very large (200,000 triangles), so intersection is relatively slow (even with BVH). I set the sample rate as 1 and only use Phong shading. There are too many details on this sculpture that I can't avoid aliasing.
+
+[scene6_eagle.bmp](output/scene6_eagle.bmp)
+![alt text](output/scene6_eagle.bmp)
+This mesh is larger (270,000 nodes, 500,000 faces, even more triangles). If we set the sample rate as 1 and use MPI, we can still render this image in 1min30s.
 
 ## License
-Please see the [License.txt](License.txt) for more information.
+Please check out [License.txt](License.txt).
 
 ## Acknowledgements
-This framework is based on assignments from MIT course 6.837: 
+I would like to thank MIT professor Justin Solomon for his great lectures on computer graphics.
+
+This framework is based on assignment 4 and 5 from MIT course 6.837: 
 https://ocw.mit.edu/courses/6-837-computer-graphics-fall-2012/
 
-This website provides a lot of 3D sculptures from museums:
+Here is a clear explanation for the depth of field (DOF) effect: https://pathtracing.home.blog/depth-of-field/
+
+This website provides a lot of 3D sculpture meshes:
 https://threedscans.com/
 
-There are lots of high-resolution planet pictures on this website:
+This is a great website for high-resolution planet pictures:
 https://planetpixelemporium.com

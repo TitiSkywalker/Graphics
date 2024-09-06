@@ -6,7 +6,7 @@ static constexpr int HEIGHT = 400;
 
 //anti-aliasing
 static constexpr bool SUPERSAMPLING = true;
-static constexpr bool JITTOR = false;
+static constexpr bool JITTER = false;
 static constexpr bool GAUSSIANBLUR = true;	
 
 //ray tracing 
@@ -22,7 +22,7 @@ static constexpr bool USEMPI = true;
 //choose input/output file
 static constexpr int CHOICE = 4;
 
-//edit this when you want to add new files or change path
+//edit this when you want to add new files or change filename
 //all input | output files must be within the "input | output" directory
 static const char* inputFiles[] =
 {
