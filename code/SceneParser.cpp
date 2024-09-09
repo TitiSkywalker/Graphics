@@ -445,7 +445,7 @@ LightSphere* SceneParser::parseLightSphere(int id)
 void SceneParser::parseMaterials() 
 {
     char token[MAX_PARSER_TOKEN_LENGTH];
-    getToken(token); assert(!strcmp(token, "{"));
+    getToken(token); matchToken(token, "{");
 
     // read in the number of objects
     getToken(token); matchToken(token, "numMaterials");
