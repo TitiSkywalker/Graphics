@@ -2,7 +2,7 @@
 
 ![alt text](output/examples.jpg)
 
-This project implements Monte Carlo ray tracing in C++, accelerated by MPI. 
+This project implements Monte Carlo ray tracing in C++, accelerated by MPI. I have also implemented a simplified version of this ray tracer in CUDA. You can check it out [here](https://github.com/TitiSkywalker/Graphics-CUDA).
 
 ## 0. Table of contents
 - [Installation](#1-Installation)
