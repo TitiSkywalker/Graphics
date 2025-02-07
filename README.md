@@ -145,7 +145,7 @@ My BVH is a perfect balanced binary search tree. In each node, there is a boundi
 
 To compute the intersection point, I first test the incoming ray with the bounding box. If no intersection is detected, I can safely return without further computation. If a intersection is detected, we must recurse on all children.
 
-In the worst case we need to traverse the tree, which takes $O(n)$ time. In the best case we can return immediately, which takes $O(1)$ time. If the triangles are layed out evenly in space, it will only take $O(\log n)$ time.
+In the worst case we need to traverse the tree, which takes $O(n)$ time. In the best case we can return immediately, which takes $O(1)$ time. If the triangles are laid out evenly in space, it will only take $O(\log n)$ time.
 
 Kd-tree is not perfectly balanced, but it is smarter. It allows us to recurse only once when we get lucky. For BVH we need to recurse twice, but the depth is smaller. I choose BVH because coding is simpler, and the constant coefficient within $O()$ is smaller.
 
@@ -155,14 +155,19 @@ Using MPI to accelerate a program is relatively easy. I let each process compute
 However, scheduling is actually a problem. At the beginning I separated the image into strips, but this can lead to unbalanced workloads. Some processes run very fast, while others are slow. To get a better schedule, I first render the image with low resolution and count the time for rendering different places. Then I can divide the tasks evenly in time domain, rather than in physical domain.
 
 ### 3.4 Anti-aliasing
-**Super sampling** is achieved by rendering a 3x3 larger image, then "shrink" it by taking the means. This will make your program 10x slower.
+**Super sampling** is achieved by rendering a 3x3 larger image, then "shrink" it by taking the means. This will make your program 9x slower.
 
 **Jittered sampling** will send randomly disturbed rays into the scene, thus getting a better sampling when sample rate is high.
 
 **Gaussian blur** can be divided into 2 passes of 1D convolution, so it is very fast.
 
-You can see the effect of anti-aliasing here. From left to right: normal, super sampling, Gaussian blur.
+You can see the effect of anti-aliasing techniques here. From left to right: normal, super sampling, Gaussian blur. 
+
 ![alt text](output/compare.bmp)
+
+The following demo shows the impact of sample rates. It seems that we can only get linear convergence with exponential computation. Supersampling is done with sample rate equals 8. Jittered sampling is done with sample rate equals 64. Although not obvious, supersampling and jittered sampling is better than brute-force sampling, because they explore more contents inside the scene.
+
+![alt text](output/sample.gif)
 
 ## 4. Error handling
 Most runtime errors occur while parsing scene files. I use a special class to do this (if you are interested, please check out [code/SceneParser.hpp](code/SceneParser.hpp) and [code/SceneParser.cpp](code/SceneParser.cpp)). Instead of using asserts everywhere, I throw **std::runtime_error** when something goes wrong. Then the class will catch it and return normally.
