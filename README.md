@@ -165,7 +165,7 @@ You can see the effect of anti-aliasing techniques here. From left to right: nor
 
 ![alt text](output/compare.bmp)
 
-The following demo shows the impact of sample rates. It seems that we can only get linear convergence with exponential computation. Supersampling is done with sample rate equals 8. Jittered sampling is done with sample rate equals 64. Although not obvious, supersampling and jittered sampling is better than brute-force sampling, because they explore more contents inside the scene.
+The following demo shows the impact of sample rates. It seems that we can only get linear convergence with exponential computation. Supersampling is done with sample rate equals 8. Jittered sampling is done with sample rate equals 64. Although not obvious, supersampling and jittered sampling are better than brute-force sampling, because they explore more contents inside the scene.
 
 ![alt text](output/sample.gif)
 
